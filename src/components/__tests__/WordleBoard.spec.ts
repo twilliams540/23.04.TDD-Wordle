@@ -6,24 +6,28 @@ describe('WordleBoard', () => {
   let wordOfTheDay = 'TESTS'
   let wrapper: ReturnType<typeof mount>
 
+  const playerSubmitsGuess = async (guess: string) => {
+    const guessInput = wrapper.find('input[type=text]')
+    await guessInput.setValue(guess)
+    await guessInput.trigger('keydown.enter')
+  }
+
   beforeEach(() => {
     wrapper = mount(WordleBoard, { props: { wordOfTheDay } })
   })
+
   test('a victory message appears when the user makes a guess that matches the word of the day', async () => {
-    const guessInput = wrapper.find('input[type=text]')
-    await guessInput.setValue(wordOfTheDay)
-    await guessInput.trigger('keydown.enter')
+    await playerSubmitsGuess(wordOfTheDay)
 
     expect(wrapper.text()).toContain(VICTORY_MESSAGE)
   })
 
   test('a defeat message appears if the user makes a guess that is incorrect', async () => {
-    const guessInput = wrapper.find('input[type=text]')
-    await guessInput.setValue('WRONG')
-    await guessInput.trigger('keydown.enter')
+    await playerSubmitsGuess('WRONG')
 
     expect(wrapper.text()).toContain(DEFEAT_MESSAGE)
   })
+
   test('no end-of-game message appears if the user has not yet made a guess', async () => {
     const wrapper = mount(WordleBoard, { props: { wordOfTheDay } })
     expect(wrapper.text()).not.toContain(VICTORY_MESSAGE)
