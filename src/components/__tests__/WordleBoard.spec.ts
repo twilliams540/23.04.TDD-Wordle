@@ -29,8 +29,13 @@ describe('WordleBoard', () => {
   })
 
   test('no end-of-game message appears if the user has not yet made a guess', async () => {
-    const wrapper = mount(WordleBoard, { props: { wordOfTheDay } })
     expect(wrapper.text()).not.toContain(VICTORY_MESSAGE)
     expect(wrapper.text()).not.toContain(DEFEAT_MESSAGE)
+  })
+
+  test('if a word of the day provided does not contain exactly 5 characters show a warning', async () => {
+    vi.spyOn(console, 'warn')
+    mount(WordleBoard, { props: { wordOfTheDay: 'FLY' } })
+    expect(console.warn).toHaveBeenCalled()
   })
 })
