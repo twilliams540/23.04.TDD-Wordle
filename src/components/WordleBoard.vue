@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { DEFEAT_MESSAGE, VICTORY_MESSAGE } from '@/settings'
 import { ref } from 'vue'
+import englishWords from '@/englishWordsWith5Letters.json'
 
 defineProps({
   wordOfTheDay: {
     type: String,
     validator: (wordGiven: string) =>
-      wordGiven.length === 5 && wordGiven === wordGiven.toUpperCase()
+      wordGiven.length === 5 &&
+      wordGiven === wordGiven.toUpperCase() &&
+      englishWords.includes(wordGiven)
   }
 })
 
