@@ -50,4 +50,10 @@ describe('WordleBoard', () => {
     mount(WordleBoard, { props: { wordOfTheDay: 'QWERT' } })
     expect(console.warn).toHaveBeenCalled()
   })
+
+  test('no warning is immediate if word is a real, uppercase, English word with 5 characters', async () => {
+    console.warn = vi.fn()
+    mount(WordleBoard, { props: { wordOfTheDay: 'TESTS' } })
+    expect(console.warn).not.toHaveBeenCalled()
+  })
 })
