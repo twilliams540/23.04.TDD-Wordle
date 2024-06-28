@@ -36,23 +36,18 @@ describe('WordleBoard', () => {
   })
 
   describe('Rules for defining the word of the day', () => {
-    test('if a word of the day provided does not contain exactly 5 characters show a warning', async () => {
-      console.warn = vi.fn()
-      mount(WordleBoard, { props: { wordOfTheDay: 'FLY' } })
-      expect(console.warn).toHaveBeenCalled()
-    })
-
-    test('if the word of the day is not all in uppercase, a warning is emitted', async () => {
-      console.warn = vi.fn()
-      mount(WordleBoard, { props: { wordOfTheDay: 'wrong' } })
-      expect(console.warn).toHaveBeenCalled()
-    })
-
-    test('if the word of the day is not a real English word, a warning is emitted', async () => {
-      console.warn = vi.fn()
-      mount(WordleBoard, { props: { wordOfTheDay: 'QWERT' } })
-      expect(console.warn).toHaveBeenCalled()
-    })
+    test.each([
+      { wordOfTheDay: 'FLY', reason: 'word of the day must have 5 characters' },
+      { wordOfTheDay: 'tests', reason: 'word of the day must be in uppercase' },
+      { wordOfTheDay: 'QWERT', reason: 'word of the day must be a valid english word' }
+    ])(
+      'Since $reason, $wordOfTheDay is invalid and a warning is emitted',
+      async ({ wordOfTheDay }) => {
+        console.warn = vi.fn()
+        mount(WordleBoard, { props: { wordOfTheDay } })
+        expect(console.warn).toHaveBeenCalled()
+      }
+    )
 
     test('no warning is immediate if word is a real, uppercase, English word with 5 characters', async () => {
       console.warn = vi.fn()
